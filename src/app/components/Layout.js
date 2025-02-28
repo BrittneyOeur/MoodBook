@@ -20,7 +20,6 @@ export default function Layout({ children }) {
         setSideBar((prevState) => !prevState);
     };
 
-
     return (
         <div className="relative">
             {/* Sidebar */}

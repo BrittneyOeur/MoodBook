@@ -8,31 +8,10 @@ import { AccountContext } from "../components/Account";
 import Layout from "../components/Layout";
 
 function Homepage() {
-    const [isSideBarOpen, setSideBar] = useState(false);
     const [entries, setEntries] = useState([]);
     const [currentEntry, setCurrentEntry] = useState({ mood: "", description: [], activities: [] });
-    const [isMounted, setIsMounted] = useState(false); // Prevent SSR mismatch
     const { getSession } = useContext(AccountContext);
     const router = useRouter();
-
-    /*
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (isMounted) {
-            const savedEntries = localStorage.getItem("entries");
-            if (savedEntries) {
-                try {
-                    setEntries(JSON.parse(savedEntries));
-                } catch (error) {
-                    console.error("Failed to parse saved entries:", error);
-                }
-            }
-        }
-    }, [isMounted]);
-    */
 
     const handleMoodChange = (event) => {
         setCurrentEntry((prevEntry) => ({ ...prevEntry, mood: event.target.value }));
@@ -107,12 +86,6 @@ function Homepage() {
             console.error("Error saving entry:", error.message);
         }
     };
-
-    /*
-    if (!isMounted) {
-        return null; // Avoid rendering on the server
-    }
-    */
 
     return (
         <>

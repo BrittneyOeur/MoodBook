@@ -4,10 +4,8 @@ import { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import AddEntry from "./pages/addentry/page";
 import { AccountContext } from "./components/Account";
-import Status from "./components/Status";
 
 export default function Home() {
-    const [hasEntries, setHasEntries] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true); // Added loading state for session check
     const { getSession } = useContext(AccountContext);
@@ -26,44 +24,6 @@ export default function Home() {
         };
 
         checkSession();
-        
-        /*
-        if (typeof window !== "undefined") {
-            const entries = localStorage.getItem("entries");
-            console.log("Entries in localStorage:", entries, typeof entries);
-    
-            if (entries) {
-                try {
-                    // Converts to an object
-                    const parsedEntries = JSON.parse(entries);
-                    console.log("Parsed entries:", parsedEntries, typeof parsedEntries);
-    
-                    // Ensure parsedEntries is an array
-                    let safeEntries = [];
-    
-                    if (Array.isArray(parsedEntries)) {
-                        safeEntries = parsedEntries;
-                    } 
-                    
-                    else if (typeof parsedEntries === "object") {
-                        console.log("Entries stored as object, extracting values...");
-                         // Extract values if stored as object
-                        safeEntries = Object.values(parsedEntries);
-                    }
-    
-                    console.log("Final safeEntries:", safeEntries, Array.isArray(safeEntries));
-    
-                    if (safeEntries.length > 0) {
-                        setHasEntries(true);
-                        
-                    }
-                } catch (error) {
-                    console.error("Error parsing JSON:", error);
-                }
-            }
-        }
-    }, [getSession]);  
-    */ 
     }, []);
 
     return (
@@ -95,12 +55,6 @@ export default function Home() {
                             Sign In
                         </button>
                     </Link>
-                    {/*
-                    <div className="flex gap-4">
-                        <p className="text-gray-400 text-sm">Not registered?</p>
-                        <a href="/pages/registration" className="text-indigo-400 text-sm">Register</a>
-                    </div>
-                    */}
                 </div>
             )}
             </div>
