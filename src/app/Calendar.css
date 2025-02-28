@@ -1,0 +1,39 @@
+.fc {
+  margin: auto;
+  height: auto;
+  width: 80%;
+}
+
+/* Change the background color of all buttons */
+.fc-button {
+  background-color: #5d70ff !important; 
+  color: white !important;
+  border: none !important;
+}
+
+/* Change specific buttons */
+.fc-prev-button {
+  background-color: #a0abff !important;
+}
+
+.fc-next-button {
+  background-color: #a0abff !important;
+}
+
+.fc-today-button {
+  background-color: #7d8dff !important;
+}
+
+.fc-day-today {
+  background-color: #d1d8ff !important;
+}
+
+.fc-event {
+  background-color: #7d8dff;
+  margin-bottom: 2px;
+  border-radius: 4px;
+}
+
+.fc-event-selected {
+  background-color: #599a5e !important;
+}

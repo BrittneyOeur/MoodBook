@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* background-image: linear-gradient(to bottom right, rgb(241, 241, 245), rgba(94, 121, 255, 0.55)); */
+  background-image: url("/background.png");
+  background-size: cover;
+  background-position: center;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* background-image: linear-gradient(to bottom right, white, rgba(94, 121, 255, 0.55)); */
+    --foreground: #0a0a0a;
+  }
+
+  body {
+    background-image: linear-gradient(to bottom right, rgb(241, 241, 245), rgba(94, 121, 255, 0.55));
+    background-size: cover; /* Optional: makes the image cover the entire background */
+    background-position: center; /* Optional: centers the image */
+  }
+}
+
+@font-face {
+  font-family: 'Caveat';
+  src: url("/fonts/Caveat-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900; /* Variable font range */
+  font-style: normal;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Caveat', Arial, Helvetica, sans-serif;
+}
