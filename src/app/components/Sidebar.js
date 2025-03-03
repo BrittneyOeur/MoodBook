@@ -43,7 +43,7 @@ function Sidebar() {
                             <Link href="/pages/calendar">
                                 <Options text="Calendar" />
                             </Link>
-                            <Link href="/pages/profile">
+                            <Link href="/account/profile">
                                 <Options text="Profile" />
                             </Link>
                             <Link href="/pages/addentry">

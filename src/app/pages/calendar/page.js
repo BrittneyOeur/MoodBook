@@ -131,7 +131,6 @@ function Calendar() {
                         {/* Display the selected event details */}
                         {selectedEvent ? (
                             <div className="mt-5">
-                                <h3>Selected Event</h3>
                                 <ul>
                                     <li><strong>Title:</strong> {selectedEvent.title}</li>
                                     <li><strong>Description:</strong> {selectedEvent.description || "None"}</li>

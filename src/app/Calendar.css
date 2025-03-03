@@ -13,11 +13,11 @@
 
 /* Change specific buttons */
 .fc-prev-button {
-  background-color: #a0abff !important;
+  background-color: #7d8dff !important;
 }
 
 .fc-next-button {
-  background-color: #a0abff !important;
+  background-color: #7d8dff !important;
 }
 
 .fc-today-button {
@@ -32,8 +32,4 @@
   background-color: #7d8dff;
   margin-bottom: 2px;
   border-radius: 4px;
-}
-
-.fc-event-selected {
-  background-color: #599a5e !important;
 }
