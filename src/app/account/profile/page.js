@@ -92,7 +92,8 @@ const Profile = () => {
     }
 
     fetchEntries();
-}, [router.pathname]);
+  }, [router.pathname]);
+
 
   return (
     <div className="text-center p-5">
@@ -118,15 +119,17 @@ const Profile = () => {
                       <span className="text-indigo-400">{entries.length || "Loading..."}</span>
                     </div>
                   </div>
-                  <div className="flex gap-6">
-                    <Link href="/pages/change-email">
-                      <button className="p-3 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
+                  <div>
+                    <Link href="/account/profile/change-email">
+                      <button className="w-full p-2 mt-5 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
                         Change Email Address
                       </button>
                     </Link>
-                    <button className="p-3 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
-                      Change Password
-                    </button>
+                    <Link href="/">
+                      <button className="w-full p-2 mt-5 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
+                        Change Password
+                      </button>
+                    </Link>
                   </div>
                   </>
                 )}
