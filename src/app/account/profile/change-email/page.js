@@ -34,7 +34,11 @@ function ChangeEmail() {
 
   // Instantiate CognitoIdentityProviderClient
   const client = new CognitoIdentityProviderClient({
-    region: process.env.NEXT_PUBLIC_REGION, // Make sure this is set in your environment variables
+    region: process.env.NEXT_PUBLIC_REGION,
+    credentials: {
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
+    }
   });
 
   const resendVerificationCode = async (email) => {
@@ -44,24 +48,26 @@ function ChangeEmail() {
         setError("User not found.");
         return;
       }
-
-      const userAttributes = await getUserAttributes(user); // Fetch current user attributes
+  
+      // Fetch user attributes
+      const userAttributes = await getUserAttributes(user);
+  
+      // Check if the email is already verified
       const emailVerified = userAttributes.some(
         (attr) => attr.Name === "email_verified" && attr.Value === "true"
       );
-
+  
       if (emailVerified) {
-        setMessage(
-          "Email is already verified. You can proceed with account changes."
-        );
-        return;
+        setMessage("Email is already verified.");
+        return;  // If email is verified, don't send another code
       }
-
+  
+      // Proceed with resending confirmation code for unverified email
       const resendCommand = new ResendConfirmationCodeCommand({
         ClientId: process.env.NEXT_PUBLIC_CLIENT_ID,
         Username: email,
       });
-
+  
       await client.send(resendCommand);
       console.log("Verification code resent.");
     } catch (err) {
@@ -69,14 +75,14 @@ function ChangeEmail() {
       setError("Error resending verification code.");
     }
   };
-
+  
   // Helper function to get user attributes
   const getUserAttributes = async (user) => {
     const userAttributesCommand = new AdminGetUserCommand({
       UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
       Username: user.getUsername(),
     });
-
+  
     try {
       const response = await client.send(userAttributesCommand);
       return response.UserAttributes;
@@ -84,7 +90,7 @@ function ChangeEmail() {
       console.error("Error getting user attributes:", err);
       setError("Error getting user attributes.");
     }
-  };
+  };  
 
   const signOutUserWithDelay = () => {
     // Delay for 3 seconds before signing out
@@ -94,7 +100,7 @@ function ChangeEmail() {
         user.signOut();
         console.log("User signed out after delay.");
       }
-    }, 3000); // Adjust delay as needed (3000 ms = 3 seconds)
+    }, 2000); // Adjust delay as needed (3000 ms = 3 seconds)
   };
 
   const handleSubmit = async () => {
@@ -102,52 +108,57 @@ function ChangeEmail() {
       setError("Please enter a valid email address.");
       return;
     }
-
+  
     try {
       const session = getSession();
       const user = userPool.getCurrentUser();
-
+  
       if (!user) {
         setError("User not found.");
         return;
       }
-
+  
       user.getSession((err, session) => {
         if (err) {
           setError("Error fetching session.");
           console.error(err);
           return;
         }
-
-        user.updateAttributes(
-          [{ Name: "email", Value: newEmail }],
-          async (err, result) => {
-            if (err) {
-              setError("Error updating email.");
-              console.error(err);
-            } else {
-              setMessage(
-                "Email updated successfully. Check your inbox for verification."
-              );
-
-              // Resend verification code after email update
-              await resendVerificationCode(newEmail);
-
-              signOutUserWithDelay();
-
-              // Prompt user to check their inbox for verification
-              setTimeout(() => {
-                router.push("/pages/confirmation");
-              }, 3000);
-            }
+  
+        // Check if the email is verified
+        const userAttributes = session.getIdToken().payload;
+        const emailVerified = userAttributes["email_verified"];
+  
+        if (emailVerified === "true") {
+          setMessage("Email is already verified. No further action needed.");
+          return;
+        }
+  
+        // Update email and resend verification code
+        user.updateAttributes([{ Name: "email", Value: newEmail }], async (err, result) => {
+          if (err) {
+            setError("Error updating email.");
+            console.error(err);
+          } else {
+            setMessage("Email updated successfully. Check your inbox for verification.");
+  
+            // After updating, resend the confirmation code for the new email
+            await resendVerificationCode(newEmail);
+  
+            // Sign out user and prompt them to check their inbox
+            signOutUserWithDelay();
+  
+            setTimeout(() => {
+              router.push("/pages/confirmation");
+            }, 3000);
           }
-        );
+        });
       });
     } catch (err) {
       setError("Failed to update email.");
       console.error(err);
     }
-  };
+  };    
 
   const handleCancel = () => {
     router.push("/account/profile");

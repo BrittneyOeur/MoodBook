@@ -15,13 +15,13 @@ function Calendar() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [entriesOnSelectedDate, setEntriesOnSelectedDate] = useState([]);
 
-    const { getSession } = useContext(AccountContext); // Get session from Cognito
+    const { getSession } = useContext(AccountContext);
 
     // Fetch entries from the database when the component loads
     useEffect(() => {
         async function fetchEntries() {
             try {
-                const session = await getSession(); // Get the session to check authentication
+                const session = await getSession();
                 const token = session?.idToken?.jwtToken;
 
                 if (!token) {
@@ -45,7 +45,7 @@ function Calendar() {
         }
 
         fetchEntries();
-    }, [getSession]); // Add getSession as a dependency to refresh the session if needed
+    }, [getSession]); 
 
     // Handle date click and filter entries for the selected date
     const handleDateClick = (info) => {

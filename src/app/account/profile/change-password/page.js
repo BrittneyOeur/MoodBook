@@ -76,10 +76,8 @@ function ChangePassword() {
 
             // Delay logout to show the success message
             setTimeout(() => {
-              // Sign the user out
               user.signOut();
 
-              // Redirect to login page after logout
               router.push("/pages/login");
             }, 3000); // Wait for 3 seconds before logging out
           }

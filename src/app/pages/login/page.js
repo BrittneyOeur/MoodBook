@@ -40,10 +40,9 @@ const Login = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen sm:m-auto">
             <div className="bg-white px-36 rounded-lg drop-shadow-[0_1.2px_1.2px_rgba(99,94,255,0.542)]">
-                <div className="bg-indigo-500 w-full h-8"></div>
                 <div className="flex flex-col py-20 items-center justify-center">
                     <h1 className="text-4xl text-indigo-500 font-bold">Sign In</h1>
-                    <h2 className="text-[18px] text-indigo-400 mt-2">Digital journal for tracking your moods</h2>
+                    <h2 className="text-[18px] text-indigo-400 font-bold mt-2">Digital journal for tracking your moods</h2>
                     <form onSubmit={handleLogin}>
                         <div className="mt-5">
                             <div>
@@ -88,15 +87,15 @@ const Login = () => {
                         </div>
                         <button
                             type="submit" 
-                            className="bg-gradient-to-r from-indigo-500 via-indigo-400 to-violet-300 text-white w-full mt-5 p-2 rounded-md hover:bg-indigo-500 transition duration-100 ease-in-out"
+                            className="bg-gradient-to-r from-indigo-500 via-indigo-400 to-violet-300 text-white font-bold w-full mt-5 p-2 rounded-md hover:bg-indigo-500 transition duration-100 ease-in-out"
                         >
                             Confirm
                         </button>
                     </form>
                     <div className="flex gap-2 text-center justify-center mt-3">
-                        <p className="text-indigo-400">Don't have an account?</p>
+                        <p className="text-indigo-400 font-bold">Don't have an account?</p>
                         <Link href="/pages/registration">
-                            <span className="text-indigo-500">Register</span>
+                            <span className="text-indigo-500 font-bold">Register</span>
                         </Link>
                     </div>
                 </div>
