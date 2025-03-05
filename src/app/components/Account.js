@@ -20,7 +20,7 @@ const Account = (props) => {
                         console.error("Error fetching session:", err);
                         reject("Error fetching session");
                     } else {
-                        console.log("Session:", session);
+                        // console.log("Session:", session);
                         resolve(session);
                     }
                 });

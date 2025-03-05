@@ -7,15 +7,15 @@ import { useRouter } from "next/navigation";
 import Layout from "@/app/components/Layout";
 import Link from "next/link";
 
-const Profile = () => {
-  const [email, setEmail] = useState('');
+function Profile() {
+  const [email, setEmail] = useState("");
   const [entries, setEntries] = useState([]);
   const [error, setError] = useState(null);
 
   // Setting up Cognito User Pool
   const poolData = {
-    UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID, 
-    ClientId: process.env.NEXT_PUBLIC_CLIENT_ID, 
+    UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
+    ClientId: process.env.NEXT_PUBLIC_CLIENT_ID,
   };
 
   const router = useRouter();
@@ -31,7 +31,7 @@ const Profile = () => {
           // Fetch the session
           user.getSession((err, session) => {
             if (err) {
-              setError('Error fetching session.');
+              setError("Error fetching session.");
               console.error(err);
               return;
             }
@@ -39,26 +39,28 @@ const Profile = () => {
             // Fetch user attributes after successful session retrieval
             user.getUserAttributes((err, attributes) => {
               if (err) {
-                setError('Error fetching user attributes.');
+                setError("Error fetching user attributes.");
                 console.error(err);
                 return;
               }
 
               // Find email attribute and set it
-              const emailAttribute = attributes.find(attr => attr.Name === 'email');
+              const emailAttribute = attributes.find(
+                (attr) => attr.Name === "email"
+              );
               if (emailAttribute) {
                 setEmail(emailAttribute.Value);
               } else {
-                setError('Email not found');
+                setError("Email not found");
               }
             });
           });
         } else {
-          setError('No user found');
+          setError("No user found");
         }
       } catch (err) {
-        setError('Failed to fetch user data.');
-        console.error('Error fetching user data:', err);
+        setError("Failed to fetch user data.");
+        console.error("Error fetching user data:", err);
       }
     };
 
@@ -67,33 +69,32 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchEntries() {
-        try {
-            const session = await getSession();
-            const token = session?.idToken?.jwtToken;
+      try {
+        const session = await getSession();
+        const token = session?.idToken?.jwtToken;
 
-            if (!token) {
-                console.error("No user token found.");
-                return;
-            }
-
-            const response = await fetch("/api/entry", {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch entries");
-            }
-
-            const data = await response.json();
-            setEntries(data.entries || []);
-        } catch (error) {
-            console.error("Error fetching entries:", error.message);
+        if (!token) {
+          console.error("No user token found.");
+          return;
         }
+
+        const response = await fetch("/api/entry", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch entries");
+        }
+
+        const data = await response.json();
+        setEntries(data.entries || []);
+      } catch (error) {
+        console.error("Error fetching entries:", error.message);
+      }
     }
 
     fetchEntries();
   }, [router.pathname]);
-
 
   return (
     <div className="text-center p-5">
@@ -101,36 +102,42 @@ const Profile = () => {
         <Layout>
           <div className="bg-white w-full px-36 py-24 rounded-lg drop-shadow-[0_1.2px_1.2px_rgba(99,94,255,0.542)]">
             <div>
-              <h1 className="text-indigo-500 text-4xl font-bold">
-                Profile
-                </h1>
-              <div>
+              <h1 className="text-indigo-500 text-4xl font-bold">Profile</h1>
+              <div className="mt-6">
                 {error ? (
                   <p>{error}</p>
                 ) : (
                   <>
-                  <div className="justify-center text-center items-center mb-4 text-xl">
-                    <div className="flex gap-1 justify-center">
-                      <span className="text-indigo-500 font-bold">Email: </span>
-                      <span className="text-indigo-400">{email || "Loading..."}</span>
+                    <div className="justify-center text-center items-center mb-4 text-xl">
+                      <div className="flex gap-1 justify-center">
+                        <span className="text-indigo-500 font-bold">
+                          Email:{" "}
+                        </span>
+                        <span className="text-indigo-400">
+                          {email || "Loading..."}
+                        </span>
+                      </div>
+                      <div className="flex gap-1 justify-center">
+                        <span className="text-indigo-500 font-bold">
+                          Total Entries:{" "}
+                        </span>
+                        <span className="text-indigo-400">
+                          {entries.length || "Loading..."}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex gap-1 justify-center">
-                      <span className="text-indigo-500 font-bold">Total Entries: </span>
-                      <span className="text-indigo-400">{entries.length || "Loading..."}</span>
+                    <div>
+                      <Link href="/account/profile/change-email">
+                        <button className="w-full p-2 mt-7 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
+                          Change Email Address
+                        </button>
+                      </Link>
+                      <Link href="/account/profile/change-password">
+                        <button className="w-full p-2 mt-3 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
+                          Change Password
+                        </button>
+                      </Link>
                     </div>
-                  </div>
-                  <div>
-                    <Link href="/account/profile/change-email">
-                      <button className="w-full p-2 mt-5 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
-                        Change Email Address
-                      </button>
-                    </Link>
-                    <Link href="/">
-                      <button className="w-full p-2 mt-5 rounded-md bg-indigo-400 text-white font-bold hover:bg-indigo-300 transition duration-200">
-                        Change Password
-                      </button>
-                    </Link>
-                  </div>
                   </>
                 )}
               </div>
@@ -140,6 +147,6 @@ const Profile = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Profile;
