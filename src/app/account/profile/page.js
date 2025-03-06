@@ -108,7 +108,7 @@ function Profile() {
                   <p>{error}</p>
                 ) : (
                   <>
-                    <div className="justify-center text-center items-center mb-4 text-xl">
+                    <div className="justify-center text-center items-center text-xl">
                       <div className="flex gap-1 justify-center">
                         <span className="text-indigo-500 font-bold">
                           Email:{" "}
