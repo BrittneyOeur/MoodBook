@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
+import { AccountContext } from "@/app/components/Account";
 
 function ResetPassword() {
     const [email, setEmail] = useState("");
@@ -12,33 +14,54 @@ function ResetPassword() {
     const [error, setError] = useState("");
 
     const router = useRouter();
+    const { getSession } = useContext(AccountContext);
+
+    const poolData = {
+      UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
+      ClientId: process.env.NEXT_PUBLIC_CLIENT_ID,
+    };
+
+    const userPool = new CognitoUserPool(poolData);
 
     const handleCancel = () => {
         router.push("/pages/login");
     };
 
-    const handleResetPasswordRequest = async (e) => {
-        e.preventDefault();
-        try {
+    const handleResetPasswordRequest = () => {
+      setError("");
+      setMessage("");
+  
+      const user = new CognitoUser({ Username: email, Pool: userPool });
+  
+      user.forgotPassword({
+        onSuccess: (data) => {
+          console.log("Reset code sent:", data);
           setMessage(`A reset code has been sent to ${email}.`);
-          setStep(2); // Proceed to the next step (enter code and new password)
-        } catch (err) {
-          setError("There was an error sending the reset code.");
-        }
+          setStep(2); // Move to the next step
+        },
+        onFailure: (err) => {
+          setError(err.message || "Error sending reset code.");
+        },
+      });
     };
 
-    const handleConfirmReset = async (e) => {
-        e.preventDefault();
-        try {
+    const handleConfirmReset = () => {
+      setError("");
+      setMessage("");
+  
+      const user = new CognitoUser({ Username: email, Pool: userPool });
+  
+      user.confirmPassword(code, newPassword, {
+        onSuccess: () => {
           setMessage("Your password has been successfully reset.");
-
-          // Redirect to login page after successful reset
           setTimeout(() => {
             router.push("/pages/login");
           }, 2000);
-        } catch (err) {
-          setError("Invalid reset code or error resetting password.");
-        }
+        },
+        onFailure: (err) => {
+          setError(err.message || "Invalid reset code or error resetting password.");
+        },
+      });
     };
 
     return (
@@ -51,7 +74,7 @@ function ResetPassword() {
                 {error && <p className="text-red-500 mt-2">{error}</p>}
       
                 {step === 1 ? (
-                  <form onSubmit={handleResetPasswordRequest}>
+                  <form onSubmit={(e) => { e.preventDefault(); handleResetPasswordRequest(); }}>
                     <div className="mt-5">
                       <div>
                         <input
@@ -80,7 +103,7 @@ function ResetPassword() {
                     </div>
                   </form>
                 ) : (
-                  <form onSubmit={handleConfirmReset}>
+                  <form onSubmit={(e) => { e.preventDefault(); handleConfirmReset(); }}>
                     <div className="mt-5">
                       <div>
                         <label className="text-indigo-500 text-center" htmlFor="code">
