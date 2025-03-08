@@ -7,6 +7,11 @@ export async function GET(req) {
     await connectDB();
 
     const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.error("Missing Authorization header");
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const user = await verifyToken(authHeader);
 
     if (!user) {
@@ -14,14 +19,14 @@ export async function GET(req) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const entries = await Entry.find({ userId: user.sub });
+    const entries = await Entry.find({ userId: user.sub }).exec();
 
     return Response.json({ entries });
   } catch (error) {
     console.error("Error fetching entries:", error);
     return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
-}
+};
 
 export async function POST(req) {
   try {
@@ -86,7 +91,7 @@ export async function POST(req) {
     console.error("Error in API route:", error);
     return Response.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
-}
+};
 
 export async function DELETE(req) {
   try {
@@ -125,7 +130,7 @@ export async function DELETE(req) {
     console.error("Error in deletion:", error);
     return Response.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
-}
+};
 
 export async function PATCH(req) {
   try {
