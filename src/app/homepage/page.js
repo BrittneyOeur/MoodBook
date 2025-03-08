@@ -1,8 +1,7 @@
 "use client";
 
 import MainContent from "../pages/maincontent/page";
-import Sidebar from "../components/Sidebar";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { AccountContext } from "../components/Account";
 import Layout from "../components/Layout";
@@ -55,7 +54,7 @@ function Homepage() {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    date: new Date().toISOString(), // Ensure the backend gets a date
+                    date: new Date().toISOString(),
                     mood: currentEntry.mood,
                     description: currentEntry.description,
                     activities: currentEntry.activities,

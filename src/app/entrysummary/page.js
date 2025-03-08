@@ -26,7 +26,7 @@ export default function EntrySummary({ mood, description, activities, date, time
                 </div>
                     <button
                         className="bg-indigo-500 hover:bg-indigo-400 w-full mt-10 p-2 text-2xl duration-100 ease-in-out text-white rounded-md"
-                        onClick={onSave} // Save entry when clicked
+                        onClick={onSave}
                     >
                         Save
                     </button>

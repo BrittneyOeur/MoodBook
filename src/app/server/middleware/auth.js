@@ -25,7 +25,7 @@ const getSigningKey = async (kid) => {
 };
 
 // Function to verify the JWT token
-export const verifyToken = async (authHeader) => {  // Named export
+export const verifyToken = async (authHeader) => {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         console.error("Authorization header missing or invalid:", authHeader);
         return null;

@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 import { CognitoUser, AuthenticationDetails } from "amazon-cognito-identity-js";
-import { UserPool } from "../UserPool"; // Make sure to set up your Cognito User Pool
+import { UserPool } from "../UserPool";
 import { useRouter } from "next/navigation";
 
 const AccountContext = createContext();
@@ -52,13 +52,13 @@ const Account = (props) => {
             cognitoUser.authenticateUser(authenticationDetails, {
                 onSuccess: (result) => {                
                     // Fetch the JWT token from the result
-                    const token = result.getIdToken().getJwtToken(); // This is the JWT token you need
+                    const token = result.getIdToken().getJwtToken();
                     
                     // Resolve with the token so it can be used later
                     resolve(token);
     
                     // Redirect to homepage (or wherever you want after login)
-                    router.push("/homepage"); // Change to your desired route
+                    router.push("/homepage");
                 },
                 onFailure: (err) => {
                     console.error("Login failed:", err);

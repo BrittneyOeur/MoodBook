@@ -1,7 +1,7 @@
-'use client'; // Keep this line for client-side component
+'use client';
 
 import { Geist, Geist_Mono } from "next/font/google";
-import { metadata } from "./config/metadata"; // Adjust the path if needed
+import { metadata } from "./config/metadata";
 import "./globals.css";
 import { Account } from "./components/Account";
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <meta name="description" content={metadata.description} />
+        <meta name="description" content={metadata.description}/>
         <title>{metadata.title}</title>
       </head>
       <body className="font-caveat antialiased">

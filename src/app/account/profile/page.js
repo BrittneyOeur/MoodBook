@@ -25,7 +25,7 @@ function Profile() {
   useEffect(() => {
     const fetchUserEmail = async () => {
       try {
-        const user = userPool.getCurrentUser(); // Get current user from the pool
+        const user = userPool.getCurrentUser();
 
         if (user) {
           // Fetch the session

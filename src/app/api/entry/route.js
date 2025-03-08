@@ -1,6 +1,6 @@
 import { connectDB } from "@/app/server/utils/db";
 import Entry from "@/app/server/models/Entry";
-import { verifyToken } from "@/app/server/middleware/auth";  // Named import
+import { verifyToken } from "@/app/server/middleware/auth";
 
 export async function GET(req) {
   try {
@@ -14,8 +14,6 @@ export async function GET(req) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log("Verified User ID:", user.sub); // Debugging
-
     const entries = await Entry.find({ userId: user.sub });
 
     return Response.json({ entries });
@@ -27,7 +25,6 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    console.log("Request Headers:", req.headers);
     await connectDB();
 
     const authHeader = req.headers.get("Authorization");
@@ -41,8 +38,6 @@ export async function POST(req) {
     if (!user) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    console.log("Verified User ID:", user.sub);
 
     // Parse request body
     const body = await req.json();
@@ -76,16 +71,14 @@ export async function POST(req) {
     // Create and save new entry
     const newEntry = new Entry({
       userId: user.sub,
-      date, // Now correctly formatted as "YYYY-MM-DD"
-      time, // Now properly formatted as "hh:mm A"
+      date, // Formatted as "YYYY-MM-DD"
+      time, // Formatted as "hh:mm A"
       mood,
       description,
       activities,
     });
 
     await newEntry.save();
-
-    console.log("Entry saved:", newEntry);
 
     return Response.json({ message: "Entry saved successfully", entry: newEntry }, { status: 201 });
 
@@ -111,8 +104,6 @@ export async function DELETE(req) {
       console.error("Unauthorized access attempt");
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    console.log("Verified User ID:", user.sub); // Debugging
 
     // Get entry ID from request body
     const { entryId } = await req.json();
@@ -157,7 +148,7 @@ export async function PATCH(req) {
     const updatedEntry = await Entry.findOneAndUpdate(
       { _id: entryId, userId: user.sub }, // Ensure the user owns the entry
       { mood, description, activities }, // Update fields
-      { new: true } // Return the updated document
+      { new: true }
     );
 
     if (!updatedEntry) {

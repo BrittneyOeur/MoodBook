@@ -44,7 +44,7 @@ function ChangeEmail() {
 
     getSession()
       .then((session) => {
-        const user = userPool.getCurrentUser(); // Get the current authenticated user
+        const user = userPool.getCurrentUser();
 
         if (!user) {
           setError("No authenticated user found.");
