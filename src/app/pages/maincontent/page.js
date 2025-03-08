@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { moods } from "../../data/data";
+import { moods, typesOfActivities } from "../../data/data";
 import EntrySummary from "../../entrysummary/page";
 
 // Handles input for description
@@ -49,8 +49,7 @@ function MainContent({ time, date, mood, description, activities, handleMoodChan
     
     useEffect(() => {
         if (date) {
-            const parsedDate = new Date(date); // Parse the date received
-            console.log("Parsed date:", parsedDate); // Debugging
+            const parsedDate = new Date(date);
 
             const month = months[parsedDate.getMonth()];
             const day = parsedDate.getDate();
@@ -302,20 +301,20 @@ function MainContent({ time, date, mood, description, activities, handleMoodChan
                             </button>
 
                             {/* Dropdown Menu */}
-                            {dropdownOpen && (
-                                <div className="absolute z-10 w-full mt-1 bg-white border border-indigo-300 rounded-md shadow-lg max-h-32 overflow-y-auto">
-                                    {["Exercise", "Read", "Nap", "Game", "Other"].map((option) => (
-                                        <label key={option} className="flex items-center space-x-2 p-2 hover:bg-indigo-100">
-                                            <InputOptionActivities
-                                                option={option}
-                                                activities={activities}
-                                                handleActivitiesChange={handleActivitiesChange}
-                                            />
-                                            <span className="text-indigo-400">{option}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            )}
+                                {dropdownOpen && (
+                                    <div className="absolute z-10 w-full mt-1 bg-white border border-indigo-300 rounded-md shadow-lg max-h-32 overflow-y-auto">
+                                        {typesOfActivities.map(({ value, label }) => (
+                                            <label key={value} className="flex items-center space-x-2 p-2 hover:bg-indigo-100">
+                                                <InputOptionActivities
+                                                    option={value}
+                                                    activities={activities}
+                                                    handleActivitiesChange={handleActivitiesChange}
+                                                />
+                                                <span className="text-indigo-400">{label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                )} 
                         </div>
                     )}
                     <button

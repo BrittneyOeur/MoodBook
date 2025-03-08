@@ -10,7 +10,6 @@ import Sidebar from "@/app/components/Sidebar";
 import Link from "next/link";
 
 const REGION = process.env.NEXT_PUBLIC_REGION;
-const USER_POOL_ID = process.env.NEXT_PUBLIC_USER_POOL_ID;
 const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID;
 
 const client = new CognitoIdentityProviderClient({ region: REGION });
@@ -69,7 +68,6 @@ const Registration = () => {
       });
 
       const response = await client.send(signUpCommand);
-      console.log("Registration success:", response);
 
       router.push("/pages/confirmation");
     } catch (err) {
@@ -114,15 +112,16 @@ const Registration = () => {
                   >
                     *Password:
                   </label>
-                  <div className="flex items-center">
+                  <div className="ml-24 transform translate-y-3 -translate-x-3 flex items-center bg-white px-2 gap-2">
                     <input
                       className="cursor-pointer"
                       type="checkbox"
                       onClick={showPassword}
                     />
-                    <span className="text-indigo-400 ml-2">Show Password</span>
+                    <span className="text-indigo-500">Show Password</span>
                   </div>
                 </div>
+                
 
                 {/* Password Input Field */}
                 <input

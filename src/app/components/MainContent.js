@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
-import { moods } from "../data/data";
+import { moods, typesOfActivities } from "../data/data";
 import EntrySummary from "../entrysummary";
 
 function InputOptionDescription({ option, description, handleDescriptionChange }) {
@@ -257,14 +257,14 @@ function MainContent({ entries, mood, description, activities, handleMoodChange,
                                 {/* Dropdown Menu */}
                                 {dropdownOpen && (
                                     <div className="absolute z-10 w-full mt-1 bg-white border border-indigo-300 rounded-md shadow-lg max-h-32 overflow-y-auto">
-                                        {["Exercise", "Read", "Nap", "Game", "Other"].map((option) => (
-                                            <label key={option} className="flex items-center space-x-2 p-2 hover:bg-indigo-100">
+                                        {typesOfActivities.map(({ value, label }) => (
+                                            <label key={value} className="flex items-center space-x-2 p-2 hover:bg-indigo-100">
                                                 <InputOptionActivities
-                                                    option={option}
+                                                    option={value}
                                                     activities={activities}
                                                     handleActivitiesChange={handleActivitiesChange}
                                                 />
-                                                <span className="text-indigo-400">{option}</span>
+                                                <span className="text-indigo-400">{label}</span>
                                             </label>
                                         ))}
                                     </div>

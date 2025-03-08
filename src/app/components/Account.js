@@ -20,20 +20,17 @@ const Account = (props) => {
                         console.error("Error fetching session:", err);
                         reject("Error fetching session");
                     } else {
-                        // console.log("Session:", session);
                         resolve(session);
                     }
                 });
             } else {
                 console.log("No user found");
-                reject("No user found");
+                reject("No user found.");
             }
         });
     };
 
-    const authenticate = async (Username, Password) => {
-        console.log("Authenticating user:", Username, Password, UserPool); // Debugging
-    
+    const authenticate = async (Username, Password) => {    
         return await new Promise((resolve, reject) => {
             const authenticationData = {
                 Username,
@@ -53,9 +50,7 @@ const Account = (props) => {
             });
     
             cognitoUser.authenticateUser(authenticationDetails, {
-                onSuccess: (result) => {
-                    console.log("Login success:", result);
-                    
+                onSuccess: (result) => {                
                     // Fetch the JWT token from the result
                     const token = result.getIdToken().getJwtToken(); // This is the JWT token you need
                     
@@ -70,7 +65,6 @@ const Account = (props) => {
                     reject(err);
                 },
                 newPasswordRequired: (result) => {
-                    console.log("newPasswordRequired: ", result);
                     resolve(result);
                 }
             });

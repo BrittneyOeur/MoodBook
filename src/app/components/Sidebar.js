@@ -37,7 +37,7 @@ function Sidebar() {
                 <div>
                     {isLoggedIn && (
                         <div>
-                            <Link href="/pages/savedentries">
+                            <Link href="/pages/saved-entries">
                                 <Options text="Saved Entries" />
                             </Link>
                             <Link href="/pages/calendar">
@@ -54,7 +54,7 @@ function Sidebar() {
 
                             <div className="flex gap-4 mt-6 text-center justify-center">
                                 <button
-                                    className="mt-20 text-2xl text-indigo-400 font-bold hover:text-indigo-500"
+                                    className="mt-20 text-2xl text-indigo-400 font-bold hover:text-indigo-500 transition ease-in-out delay-50"
                                     onClick={logout}
                                 >
                                     Sign out
@@ -64,7 +64,7 @@ function Sidebar() {
                     )}
                     {!isLoggedIn && (
                         <div>
-                            <Link href="/pages/savedentries">
+                            <Link href="/pages/saved-entries">
                                 <Options text="Saved Entries" />
                             </Link>
                             <Options text="Calendar" />

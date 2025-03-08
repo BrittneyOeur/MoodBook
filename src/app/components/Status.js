@@ -9,7 +9,6 @@ const Status = () => {
     useEffect(() => {
         getSession()
             .then(session => {
-                // console.log("Session: ", session);
                 setStatus(true);
                 setIsLoading(false);
             })

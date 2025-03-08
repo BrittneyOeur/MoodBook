@@ -71,8 +71,6 @@ function Edit() {
     };
 
     const handleUpdate = async () => {
-        console.log("--- Current Entry Before Saving:", currentEntry);
-    
         if (!currentEntry._id) {
             console.error("No entry ID found for updating");
             return;
@@ -109,8 +107,6 @@ function Edit() {
                 throw new Error(result.error || "Failed to update entry in MongoDB");
             }
     
-            console.log("--- ENTRY UPDATED: ", result);
-    
             setEntries((prevEntries) =>
                 prevEntries.map((entry) =>
                     entry._id === currentEntry._id ? result.entry : entry
@@ -118,14 +114,15 @@ function Edit() {
             );
     
             setCurrentEntry({ mood: "", description: [], activities: [] });
-            router.push("/pages/savedentries");
+            router.push("/pages/saved-entries");
         } catch (error) {
             console.error("Error updating entry:", error.message);
         }
     };
 
+    // Prevent rendering MainContent before currentEntry data is set
     if (!isMounted || !currentEntry.date) {
-        return null; // Prevent rendering MainContent before currentEntry data is set
+        return null; 
     }
 
     return (

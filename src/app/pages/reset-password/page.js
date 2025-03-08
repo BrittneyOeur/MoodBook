@@ -3,7 +3,6 @@
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
-import { AccountContext } from "@/app/components/Account";
 
 function ResetPassword() {
     const [email, setEmail] = useState("");
@@ -14,7 +13,6 @@ function ResetPassword() {
     const [error, setError] = useState("");
 
     const router = useRouter();
-    const { getSession } = useContext(AccountContext);
 
     const poolData = {
       UserPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
@@ -35,7 +33,6 @@ function ResetPassword() {
   
       user.forgotPassword({
         onSuccess: (data) => {
-          console.log("Reset code sent:", data);
           setMessage(`A reset code has been sent to ${email}.`);
           setStep(2); // Move to the next step
         },
@@ -75,7 +72,7 @@ function ResetPassword() {
       
                 {step === 1 ? (
                   <form onSubmit={(e) => { e.preventDefault(); handleResetPasswordRequest(); }}>
-                    <div className="mt-5">
+                    <div className="mt-4">
                       <div>
                         <input
                           className="w-full px-2 py-1 mt-1 border rounded-md outline outline-2 outline-indigo-300 focus:outline-indigo-700"

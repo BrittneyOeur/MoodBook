@@ -63,8 +63,6 @@ function NewEntry() {
     };
 
     const handleSave = async () => {
-        console.log("--- Current Entry Before Saving:", currentEntry);
-
         try {
             const session = await getSession();
             const token = session?.idToken?.jwtToken;
@@ -82,7 +80,7 @@ function NewEntry() {
                 },
                 body: JSON.stringify({
                     date: new Date(), 
-                    time: currentEntry.time, // Store the current time when entry is created
+                    time: currentEntry.time,
                     mood: currentEntry.mood,
                     description: currentEntry.description,
                     activities: currentEntry.activities,
@@ -95,7 +93,6 @@ function NewEntry() {
                 throw new Error(result.error || "Failed to save entry to MongoDB");
             }
 
-            console.log("--- NEW ENTRY SAVED: ", result);
             setEntries([...entries, result.entry]);
             setCurrentEntry({ mood: "", description: [], activities: [] });
             router.push("/pages/addentry");

@@ -4,7 +4,6 @@ import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import {
   CognitoUserPool,
-  CognitoUserAttribute,
 } from "amazon-cognito-identity-js";
 import { AccountContext } from "@/app/components/Account";
 

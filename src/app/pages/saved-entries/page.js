@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import { AccountContext } from "@/app/components/Account"; // Ensure this is the correct path
+import { AccountContext } from "@/app/components/Account";
 import { useRouter } from "next/navigation";
 import Layout from "@/app/components/Layout";
 import { Tabs, Tab, Box } from "@mui/material";
@@ -37,14 +37,15 @@ function a11yProps(index) {
 }
 
 function SavedEntries() {
-    const { getSession } = useContext(AccountContext); // Get session from Cognito
+    const { getSession } = useContext(AccountContext);
     const currentMonth = new Date().getMonth(); // Returns 0-11
     const currentYear = new Date().getFullYear(); // Current year
 
     const [entries, setEntries] = useState([]);
     const [selectedTab, setSelectedTab] = useState(currentMonth);
-    const [selectedYear, setSelectedYear] = useState(currentYear); // State for year selection
-    // const [value, setValue] = useState(0);
+    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [entryToDelete, setEntryToDelete] = useState(null);
 
     const router = useRouter();
     const months = [
@@ -52,15 +53,20 @@ function SavedEntries() {
         "July", "August", "September", "October", "November", "December"
     ];
 
-
-    const handleChange = (event, newValue) => {
-        setSelectedTab(newValue)
-    };
-    
     const filteredEntries = entries.filter((entry) => {
         const entryDate = new Date(entry.date);
         return entryDate.getMonth() === selectedTab && entryDate.getFullYear() === selectedYear;
     });
+
+    const handleChange = (event, newValue) => {
+        setSelectedTab(newValue)
+    };
+
+    // Function to confirm deletion
+    const confirmDelete = (entryId) => {
+        setEntryToDelete(entryId);
+        setIsModalOpen(true);
+    };
 
     // Deletes an specific entry
     const deleteEntry = async (entryId) => {
@@ -92,8 +98,6 @@ function SavedEntries() {
             if (!res.ok) {
                 throw new Error(result.error || "Failed to delete entry from MongoDB");
             }
-    
-            console.log("--- ENTRY DELETED: ", result);
 
             // Remove the deleted entry from the state
             setEntries((prevEntries) => prevEntries.filter((entry) => entry._id !== entryId));
@@ -119,12 +123,12 @@ function SavedEntries() {
             }
     
             const res = await fetch("/api/entry", {
-                method: "PATCH",  // Use PATCH for updating
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ entryId, ...updatedData }),  // Send the updated fields
+                body: JSON.stringify({ entryId, ...updatedData }),
             });
     
             const result = await res.json();
@@ -133,7 +137,6 @@ function SavedEntries() {
                 throw new Error(result.error || "Failed to update entry in MongoDB");
             }
     
-            console.log("--- UPDATED ENTRY: ", result.entry);
             localStorage.setItem("entryToEdit", JSON.stringify(result.entry));
             router.push("/pages/edit");
         } catch (error) {
@@ -141,6 +144,7 @@ function SavedEntries() {
         }
     };    
 
+    // Fetches entries
     useEffect(() => {
         async function fetchEntries() {
             try {
@@ -201,7 +205,7 @@ function SavedEntries() {
                                             onChange={handleChange}
                                             sx={{
                                                 "& .MuiTabs-indicator": { backgroundColor: "#7F9CF5" }, 
-                                                "& .MuiTab-root": { color: "#667EEA", fontFamily: "inherit", },
+                                                "& .MuiTab-root": { color: "#667EEA", fontFamily: "inherit" },
                                                 "& .Mui-selected": { color: "#7F9CF5" },
                                             }}
                                         >
@@ -223,8 +227,18 @@ function SavedEntries() {
                                                             <p><strong>Activities:</strong> {entry.activities?.join(", ") || "None"}</p>
                                                         </div>
                                                         <div className="flex justify-center py-4 text-center gap-4">
-                                                            <button className="p-2 font-bold" onClick={() => updateEntry(entry._id, entry)}>Edit</button>
-                                                            <button className="bg-indigo-400 text-white px-4 py-2 font-bold rounded-md" onClick={() => deleteEntry(entry._id)}>Delete</button>
+                                                            <button 
+                                                                className="bg-indigo-400 hover:bg-indigo-300 text-white px-5 py-2 font-bold rounded-md transition duration-100 ease-in-out" 
+                                                                onClick={() => updateEntry(entry._id, entry)}
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            <button 
+                                                                className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 font-bold rounded-md transition duration-100 ease-in-out"
+                                                                onClick={() => confirmDelete(entry._id)}
+                                                            >
+                                                                Delete
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 ))
@@ -239,6 +253,32 @@ function SavedEntries() {
                     </div>
                 </Layout>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                        <h2 className="text-xl font-bold">Confirm Deletion</h2>
+                        <p className="mt-2 text-lg">
+                            Are you sure you want to delete this entry?
+                        </p>
+                        <div className="flex justify-center gap-4 mt-4">
+                            <button 
+                                className="bg-red-500 text-white px-4 py-2 rounded-md"
+                                onClick={deleteEntry}
+                            >
+                                Confirm
+                            </button>
+                            <button 
+                                className="bg-gray-300 px-4 py-2 rounded-md"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

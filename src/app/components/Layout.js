@@ -8,12 +8,12 @@ export default function Layout({ children }) {
 
     const toggleSidebar = () => {
         if (!isSideBarOpen) {
-            const openSideBarAudio = new Audio("/sounds/open-sidebar.mp3"); // Ensure path is correct
+            const openSideBarAudio = new Audio("/sounds/open-sidebar.mp3");
             openSideBarAudio.play().catch(err => console.error("Error playing audio:", err));
         }
 
         else {
-            const closeSideBarAudio = new Audio("/sounds/close-sidebar.mp3"); // Ensure path is correct
+            const closeSideBarAudio = new Audio("/sounds/close-sidebar.mp3");
             closeSideBarAudio.play().catch(err => console.error("Error playing audio:", err));
         }
 

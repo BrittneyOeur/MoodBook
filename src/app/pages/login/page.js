@@ -9,6 +9,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordType, setPasswordType] = useState("password");
+  const [error, setError] = useState("");
+
   const { authenticate } = useContext(AccountContext);
 
   // Toggle password visibility
@@ -18,23 +20,35 @@ function Login() {
     );
   };
 
+  // Function to handle login errors
+  const handleLoginError = (error) => {
+    console.error("Login failed:", error);
+    let errorMessage = "An error occurred during login. Please try again later.";
+
+    if (error.code === "NotAuthorizedException") {
+      errorMessage = "The username or password is incorrect. Please try again.";
+    }
+
+    setError(errorMessage);
+  };
+
   // Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const token = await authenticate(email, password);
-      // console.log("Login successful, token:", token);
-
-      // Store token in localStorage
+      
+      // Store the token in localStorage if authentication is successful
       localStorage.setItem("token", token);
-
-      // Redirect or take other actions after successful login
-      // Example: Redirect to dashboard or home
+      
+      // Redirect to homepage after successful login
       window.location.href = "/homepage";
     } catch (error) {
-      console.error("Login failed:", error);
+      handleLoginError(error);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen sm:m-auto">
@@ -44,6 +58,7 @@ function Login() {
           <h2 className="text-[18px] text-indigo-400 font-bold mt-2">
             Digital journal for tracking your moods
           </h2>
+          {error && <p className="text-red-500 text-center mt-2">{error}</p>}
           <form onSubmit={handleLogin}>
             <div className="mt-5">
               <div>

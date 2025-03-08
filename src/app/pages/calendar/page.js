@@ -45,14 +45,13 @@ function Calendar() {
         }
 
         fetchEntries();
-    }, [getSession]); 
-
+    }, [getSession]);
+    
     // Handle date click and filter entries for the selected date
     const handleDateClick = (info) => {
         const clickedDate = info.dateStr; // YYYY-MM-DD format from FullCalendar
         setSelectedDate(clickedDate);
-    
-        console.log("Clicked date:", clickedDate);
+        setSelectedEvent(null); // Clear selected event when selecting a new date
     
         const entriesForDate = entries.filter((entry) => {
             try {
@@ -63,7 +62,6 @@ function Calendar() {
                 }
     
                 const formattedEntryDate = parsedDate.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-                console.log(formattedEntryDate);
                 return formattedEntryDate === clickedDate;
             } catch (error) {
                 console.error("Error parsing date:", entry.date, error);
@@ -72,7 +70,6 @@ function Calendar() {
         });
     
         setEntriesOnSelectedDate(entriesForDate);
-        console.log("Entries for selected date:", entriesForDate);
     };
     
     // Create event objects for FullCalendar
@@ -100,13 +97,14 @@ function Calendar() {
     
     const clickEvent = (info) => {
         const eventDetails = {
+            date: info.event.startStr,
             title: info.event.title,
             description: info.event.extendedProps.description,
             activities: info.event.extendedProps.activities,
         };
 
         setSelectedEvent(eventDetails); // Set the clicked event data
-    }
+    };
 
     return (
         <div className="text-center px-24">
@@ -122,7 +120,7 @@ function Calendar() {
                                 end: 'today',
                             }}
                             dateClick={handleDateClick}
-                            events={events} // Pass the events array to FullCalendar
+                            events={events}
                             height={"auto"}
                             unselectAuto={true}
                             eventClick={clickEvent}
@@ -132,7 +130,8 @@ function Calendar() {
                         {selectedEvent ? (
                             <div className="mt-5">
                                 <ul>
-                                    <li><strong>Title:</strong> {selectedEvent.title}</li>
+                                    <li><strong>Date:</strong> {selectedEvent.date}</li>
+                                    <li><strong>Mood:</strong> {selectedEvent.title}</li>
                                     <li><strong>Description:</strong> {selectedEvent.description || "None"}</li>
                                     <li><strong>Activities:</strong> {selectedEvent.activities || "None"}</li>
                                 </ul>
@@ -141,7 +140,7 @@ function Calendar() {
                             // Display entries for the selected date if no event is selected
                             selectedDate && (
                                 <div className="mt-5">
-                                    <h3>Entries for {selectedDate}</h3>
+                                    <h3 className="text-xl">Entries for {selectedDate}</h3>
                                     {entriesOnSelectedDate.length > 0 ? (
                                         <ul>
                                             {entriesOnSelectedDate.map((entry) => (

@@ -20,7 +20,7 @@ const Callback = () => {
     handleRedirectCallback();
   }, [isAuthenticated, signinRedirectCallback, router]);
 
-  return <div>Loading...</div>; // You can show a loading spinner or message here
+  return <div>Loading...</div>;
 };
 
 export default Callback;

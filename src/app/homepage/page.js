@@ -67,7 +67,6 @@ function Homepage() {
             }
 
             const result = await res.json();
-            console.log("Entry saved:", result);
 
             // Update local storage and state after successful save
             setEntries((prevEntries) => {
