@@ -7,19 +7,12 @@ export async function GET(req) {
     await connectDB();
 
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      console.error("Missing Authorization header");
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    if (!authHeader) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
     const user = await verifyToken(authHeader);
+    if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-    if (!user) {
-      console.error("Unauthorized access attempt");
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const entries = await Entry.find({ userId: user.sub }).exec();
+    const entries = await Entry.find({ userId: user.sub }).select("title date").exec();
 
     return Response.json({ entries });
   } catch (error) {
