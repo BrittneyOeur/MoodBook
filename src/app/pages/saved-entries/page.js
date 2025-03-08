@@ -153,6 +153,7 @@ function SavedEntries() {
 
                 if (!token) {
                     console.error("No user token found.");
+                    setEntries([]);
                     return;
                 }
 
@@ -172,7 +173,7 @@ function SavedEntries() {
         }
 
         fetchEntries();
-    }, [router.pathname]);
+    }, [getSession, router.pathname]);
 
 
     return (
