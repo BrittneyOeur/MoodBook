@@ -74,8 +74,12 @@ const Account = (props) => {
     const logout = () => {
         const user = UserPool.getCurrentUser();
         if (user) {
-            user.signOut();
-            router.push("/");
+            const confirmLogout = window.confirm("Are you sure you want to log out?");
+            if (confirmLogout) {
+                user.signOut();
+                alert("You have been logged out.");
+                router.push("/pages/login");
+            }
         }
     };
 
