@@ -12,7 +12,7 @@ export async function GET(req) {
     const user = await verifyToken(authHeader);
     if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-    const entries = await Entry.find({ userId: user.sub }).select("title date").exec();
+    const entries = await Entry.find({ userId: user.sub }).select("title date mood description activities time").exec();
 
     return Response.json({ entries });
   } catch (error) {
