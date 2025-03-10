@@ -98,13 +98,17 @@ function SavedEntries() {
             if (!res.ok) {
                 throw new Error(result.error || "Failed to delete entry from MongoDB");
             }
-
+    
             // Remove the deleted entry from the state
             setEntries((prevEntries) => prevEntries.filter((entry) => entry._id !== entryId));
+    
+            // Close the modal after deletion
+            setIsModalOpen(false);
+            setEntryToDelete(null); // Clear the selected entry
         } catch (error) {
             console.error("Error deleting entry:", error.message);
         }
-    };
+    };    
 
     // Updates an specific entry
     const updateEntry = async (entryId, updatedData) => {
