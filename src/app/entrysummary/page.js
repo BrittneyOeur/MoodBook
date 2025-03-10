@@ -1,8 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 
 export default function EntrySummary({ mood, description, activities, date, time, onSave }) {
+    const [isSaving, setIsSaving] = useState(false);
+
+    const handleSave = () => {
+        if (!isSaving) {
+            setIsSaving(true);
+            onSave(); // Call the onSave function
+        }
+    };
+
     return (
         <div className="text-center p-5">
             <div>
@@ -24,12 +34,15 @@ export default function EntrySummary({ mood, description, activities, date, time
                         <span className="text-indigo-400">{time}</span>
                     </h2>
                 </div>
-                    <button
-                        className="bg-indigo-500 hover:bg-indigo-400 w-full mt-10 p-2 text-2xl duration-100 ease-in-out text-white rounded-md"
-                        onClick={onSave}
-                    >
-                        Save
-                    </button>
+                <button
+                    className={`w-full mt-10 p-2 text-2xl text-white rounded-md duration-100 ease-in-out ${
+                        isSaving ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-500 hover:bg-indigo-400"
+                    }`}
+                    onClick={handleSave}
+                    disabled={isSaving}
+                >
+                    {isSaving ? "Saving..." : "Save"}
+                </button>
                     <Link href="/pages/addentry">
                         <button className="w-full p-2 text-2xl mt-3 bg-indigo-400 hover:bg-indigo-300 duration-100 ease-in-out text-white rounded-md">
                             Cancel
